@@ -11,6 +11,7 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text highscoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -22,6 +23,8 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ChangeBestScore();
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -31,7 +34,7 @@ public class MainManager : MonoBehaviour
             for (int x = 0; x < perLine; ++x)
             {
                 Vector3 position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
-                var brick = Instantiate(BrickPrefab, position, Quaternion.identity);
+                var brick = Instantiate(BrickPrefab, position, Quaternion.identity, GameObject.Find("Bricks").transform);
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
             }
@@ -62,14 +65,30 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     void AddPoint(int point)
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
     }
 
+    void ChangeBestScore()
+    {
+        if (HighscoreManager.highscore != -1) {
+            highscoreText.text = $"Best Score: {HighscoreManager.highscoreName} : {HighscoreManager.highscore}";
+        } else {
+            highscoreText.text = $"Best Score: : 0";
+        }
+    }
+
     public void GameOver()
     {
+        HighscoreManager.CompareScore(m_Points);
+        ChangeBestScore();
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
