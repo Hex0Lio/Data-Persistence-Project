@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//#if UNITY_EDITOR
-//using UnityEditor;
-//#endif
 using System.IO;
 
 public static class HighscoreManager
@@ -13,18 +10,6 @@ public static class HighscoreManager
     public static int highscore = -1;
 
     private static string Path => Application.persistentDataPath + "/savedata.json";
-
-//#if UNITY_EDITOR
-//    static HighscoreManager()
-//    {
-//        EditorApplication.playModeStateChanged += ModeChanged;
-//    }
-
-//    static void ModeChanged(PlayModeStateChange change)
-//    {
-//        if (change == PlayModeStateChange.ExitingPlayMode) SaveScore();
-//    }
-//#endif
 
     public static void CompareScore(int score)
     {
@@ -53,6 +38,7 @@ public static class HighscoreManager
         }
     }
 
+    [Serializable]
     private class SaveData
     {
         public string playerName;
